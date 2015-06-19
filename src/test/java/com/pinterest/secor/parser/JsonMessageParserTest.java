@@ -88,7 +88,7 @@ public class JsonMessageParserTest extends TestCase {
     public void testExtractPartitions() throws Exception {
         JsonMessageParser jsonMessageParser = new JsonMessageParser(mConfig);
 
-        String expectedPartition = "dt=2014-07-21";
+        String expectedPartition = "2014/07/21";
 
         String resultSeconds[] = jsonMessageParser.extractPartitions(mMessageWithSecondsTimestamp);
         assertEquals(1, resultSeconds.length);

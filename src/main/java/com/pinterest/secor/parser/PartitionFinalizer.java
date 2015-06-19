@@ -122,18 +122,18 @@ public class PartitionFinalizer {
 
     private NavigableSet<Calendar> getPartitions(String topic) throws IOException, ParseException {
         final String s3Prefix = "s3n://" + mConfig.getS3Bucket() + "/" + mConfig.getS3Path();
-        String[] partitions = {"dt="};
+        String[] partitions = {""};
         LogFilePath logFilePath = new LogFilePath(s3Prefix, topic, partitions,
             mConfig.getGeneration(), 0, 0, mFileExtension);
         String parentDir = logFilePath.getLogFileParentDir();
         String[] partitionDirs = FileUtil.list(parentDir);
-        Pattern pattern = Pattern.compile(".*/dt=(\\d\\d\\d\\d-\\d\\d-\\d\\d)$");
+        Pattern pattern = Pattern.compile(".*/(\\d\\d\\d\\d/\\d\\d/\\d\\d)$");
         TreeSet<Calendar> result = new TreeSet<Calendar>();
         for (String partitionDir : partitionDirs) {
             Matcher matcher = pattern.matcher(partitionDir);
             if (matcher.find()) {
                 String date = matcher.group(1);
-                SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+                SimpleDateFormat format = new SimpleDateFormat("yyyy/MM/dd");
                 format.setTimeZone(TimeZone.getTimeZone("UTC"));
                 Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
                 calendar.setTime(format.parse(date));
@@ -148,11 +148,11 @@ public class PartitionFinalizer {
         NavigableSet<Calendar> partitionDates =
             getPartitions(topic).headSet(calendar, true).descendingSet();
         final String s3Prefix = "s3n://" + mConfig.getS3Bucket() + "/" + mConfig.getS3Path();
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        SimpleDateFormat format = new SimpleDateFormat("yyyy/MM/dd");
         format.setTimeZone(TimeZone.getTimeZone("UTC"));
         for (Calendar partition : partitionDates) {
             String partitionStr = format.format(partition.getTime());
-            String[] partitions = {"dt=" + partitionStr};
+            String[] partitions = {"" + partitionStr};
             LogFilePath logFilePath = new LogFilePath(s3Prefix, topic, partitions,
                 mConfig.getGeneration(), 0, 0, mFileExtension);
             String logFileDir = logFilePath.getLogFileDir();
@@ -162,9 +162,9 @@ public class PartitionFinalizer {
                 return;
             }
             try {
-                mQuboleClient.addPartition(mConfig.getHivePrefix() + topic, "dt='" + partitionStr + "'");
+                mQuboleClient.addPartition(mConfig.getHivePrefix() + topic, partitionStr + "'");
             } catch (Exception e) {
-                LOG.error("failed to finalize topic " + topic + " partition dt=" + partitionStr,
+                LOG.error("failed to finalize topic " + topic + " partition " + partitionStr,
                         e);
                 continue;
             }

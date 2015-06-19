@@ -119,7 +119,7 @@ public class MessagePackParserTest extends TestCase {
 
     @Test
     public void testExtractPartitions() throws Exception {
-        String expectedPartition = "dt=2014-07-21";
+        String expectedPartition = "2014/07/21";
 
         String resultSeconds[] = mMessagePackParser.extractPartitions(mMessageWithSecondsTimestamp);
         assertEquals(1, resultSeconds.length);

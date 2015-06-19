@@ -39,8 +39,8 @@ import com.pinterest.secor.message.Message;
  */
 public class DateMessageParser extends MessageParser {
     private static final Logger LOG = LoggerFactory.getLogger(DateMessageParser.class);
-    protected static final String defaultDate = "dt=1970-01-01";
-    protected static final String defaultFormatter = "yyyy-MM-dd";
+    protected static final String defaultDate = "1970/01/01";
+    protected static final String defaultFormatter = "yyyy/MM/dd";
 
     public DateMessageParser(SecorConfig config) {
         super(config);
@@ -59,7 +59,7 @@ public class DateMessageParser extends MessageParser {
                     SimpleDateFormat inputFormatter = new SimpleDateFormat(inputPattern.toString());
                     SimpleDateFormat outputFormatter = new SimpleDateFormat(defaultFormatter);
                     Date dateFormat = inputFormatter.parse(fieldValue.toString());
-                    result[0] = "dt=" + outputFormatter.format(dateFormat);
+                    result[0] = outputFormatter.format(dateFormat);
                     return result;
                 } catch (Exception e) {
                     LOG.warn("Impossible to convert date = " + fieldValue.toString()

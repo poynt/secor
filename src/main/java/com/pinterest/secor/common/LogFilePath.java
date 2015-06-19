@@ -32,7 +32,7 @@ import java.util.Arrays;
  *     prefix is top-level directory for log files.  It can be a local path or an s3 dir,
  *     topic is a kafka topic,
  *     partition1, ..., partitionN is the list of partition names extracted from message content.
- *         E.g., the partition may describe the message date such as dt=2014-01-01,
+ *         E.g., the partition may describe the message date such as 2014-01-01,
  *     generation is the consumer version.  It allows up to perform rolling upgrades of
  *         non-compatible Secor releases,
  *     kafkaPartition is the kafka partition of the topic,
